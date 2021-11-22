@@ -1,1 +1,273 @@
-<h1>疯子，你好<h1/>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>TCID50计算器</title>
+        <script type="text/javascript" src="./js/vue.js"></script>
+		<style>
+			#root{
+				//border: 1px solid #000;
+				//margin: 80px auto;
+				 width: 800px;
+				 //height: 1000px;
+				 background: whitesmoke;
+				
+				 margin: 3% 8% ;
+				 padding: 2%;
+				
+			}
+			form{
+				
+				font-weight: bold;
+				
+				width:50%;
+				padding: 1%;
+				
+			}
+		
+			  .shuru{
+				  background-color: greenyellow ;
+				height:30px;
+				width:80px;
+				font-size: 30px;
+				top:10%;
+				left:20%;
+				color: darkblue;
+				text-align:center;
+				align-self: center;
+				
+			  }
+			  .beishu{
+				  //background-color: greenyellow ;
+				  height:15px;
+				  width:150px;
+				  //font-size: 30px;
+				  top:10%;
+				  left:20%;
+				  color: #aa4444;			
+				  text-align:center;
+				  align-self: center;
+				  font-size: 18px;
+				  font-family: "eras light itc";
+				
+			  }
+			  .results-out{
+				  background-color: greenyellow ;
+				  height:40px;
+				  width:400px;
+				  text-align:center;
+				  font-size: 35px;}
+			.calc{
+				//background-color: greenyellow ;
+				height:80px;
+				width:180px;
+				font-size: 35px;
+				background-color: #FFA500;
+				}
+			#shuru1{
+				width:50%; 
+				    float:left; 
+					height:500px;
+					
+					
+			}
+			#shuru2{
+				width:40%; 
+				    float:left; 
+					height:500px;
+					
+			}
+			#ruxia{
+				margin: 3%;
+				color: darkgreen;
+			}
+			#qing{
+				color: darkgreen;
+				margin:3%;
+				font-size: 25px;
+			}
+			}	
+			  
+		</style>
+    </head>
+    <body>
+        <div id="root">
+            <form @submit.prevent>
+                <p id="qing">请在下列输入各稀释度CPE孔数:</p>
+				<div id="shuru1">
+					<li class="beishu">第 1 稀释倍数</li><br/><br/>
+					<li class="beishu">第 2 稀释倍数</li><br/><br/>
+					<li class="beishu">第 3 稀释倍数</li><br/><br/>
+					<li class="beishu">第 4 稀释倍数</li><br/><br/>
+					<li class="beishu">第 5 稀释倍数</li><br/><br/>
+					<li class="beishu">第 6 稀释倍数</li><br/><br/>
+					<li class="beishu">第 7 稀释倍数</li><br/><br/>
+					<li class="beishu">第 8 稀释倍数</li><br/><br/>
+				</div>
+				<div id="shuru2">
+					<input class="shuru" type="number" v-model.number="a1"><br/><br/>
+					<input  class="shuru" type="number" v-model.number="a2"><br/><br/>
+					<input  class="shuru" type="number" v-model.number="a3"><br/><br/>
+					<input  class="shuru" type="number" v-model.number="a4"><br/><br/>
+					<input  class="shuru" type="number" v-model.number="a5"><br/><br/>
+					<input  class="shuru" type="number" v-model.number="a6"><br/><br/>
+					<input  class="shuru" type="number" v-model.number="a7"><br/><br/>
+					<input  class="shuru" type="number" v-model.number="a8"><br/><br/>
+				</div>
+                
+                <p id="ruxia">TCID50的指数结果如下：</p>
+				
+                <input class="results-out"type="text" v-model = "tcid50"><br/><br/>
+                <button class="calc" @click.prevent="jisuan">计算</button>  
+            </form>     
+        </div>
+  
+
+    </body>
+    <script type="text/javascript">
+        Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+      
+        const a1=new Vue({
+            el:'#root',
+            data:{
+                a1:"8",
+                a2:"8",
+                a3:"7",
+                a4:"3",
+                a5:"1",
+                a6:"0",
+                a7:"0",
+                a8:"0",
+                tcid50:"",
+                arr1:[]
+            },
+            computed:{
+                fullName(){
+					console.log('get被调用了')
+                    arr1 = [this.a1,this.a2,this.a3,this.a4,this.a5,this.a6,this.a7,this.a8]
+					return arr1
+				},
+                // arr1 = [a1,a2,a3,a4,a5,a6,a7,a8]
+                
+            },
+            methods: {
+                calcTcid50(){
+                    //alert(12);
+                    var b=[],
+                    a_acc = [],  //# 各CPE累积孔数
+                    b_acc = [],  //# 各非CPE累积孔数
+                    ab_acc = [],  //# 各孔累积和
+                    a_ratio = [], // # CPE累积孔数占比
+                    temp_ratio=[];
+
+                    var a=[8,8,8,7,3,1,0,0];
+                    b = jisuan(a);
+                    console.log(b);
+                    this.tcid50=3;
+                    console.log("来了没有");
+                    
+                },
+                jisuan(a){
+                    var a=this.fullName,
+                    b=[],
+                    a_acc = [],  //# 各CPE累积孔数
+                    b_acc = [],  //# 各非CPE累积孔数
+                    ab_acc = [],  //# 各孔累积和
+                    a_ratio = []; // # CPE累积孔数占比
+                    
+                    console.log("a为： "+a);
+                    var gd50z=0.0,
+                    gd50=0.0,
+                    d50=0.0,
+                    s=0.0,
+                    tcid50j=0.0;
+
+                    for(var i =0;i<8;i++){
+                        b[i]=8-parseInt(a[i]);
+                    }
+
+                    console.log(b);
+                    
+                    
+                    // 计算CPE累积孔数，
+                    s = 0.0;
+                    a_=a.reverse()
+                    for(i=0;i<8;i++){
+                        s = parseInt(s) + parseInt(a[i]);
+                        a_acc[i]=s;
+                    }
+                    s = s + i;
+                    a_acc=a_acc.reverse();
+                    console.log(a_acc);
+                    a.reverse();
+                    //计算非CPE累积孔数
+                    s = 0
+                    for(i=0;i<8;i++){
+                        s = parseInt(s) + parseInt(b[i]);
+                        b_acc[i]=s;
+                    }
+                   
+                    console.log(b_acc);
+                    s=0;
+                    // 计算总累积孔数
+                    for(i=0;i<8;i++){
+                        ab_acc[i]=a_acc[i]+b_acc[i];
+                    }
+                    console.log(ab_acc);
+
+                    // 计算各CPE累积孔数 占 总累积孔数（CPE累积和非CPE累积）的 比例
+                    for(i=0;i<8;i++){
+                        
+                        a_ratio[i]=parseFloat(a_acc[i])/parseFloat(ab_acc[i]);
+                    }
+                    
+                    console.log("\n CPE累积占比为：\n " + a_ratio);
+                    
+
+                    // 寻找大于等于最接近于50%的稀释度 占率
+                    
+                    a_ratio.reverse();
+                    for(i=0;i<8;i++){
+                        
+                        if (parseFloat(a_ratio[i]) >= 0.5){
+                            gd50z = parseFloat(a_ratio[i]);
+                            gd50 = 8 - i - 1;
+                            break;
+                        }
+                    }
+                    console.log("gd50z:"+gd50z);
+                    console.log("a_ra: "+a_ratio);
+                    
+
+                    // 寻找小于50%且最近于50%的稀释度 占率
+                    a_ratio.reverse();
+                    for(i=0;i<8;i++){
+                        if (a_ratio[i] < 0.5){
+                            console.log("现在a-ra为： "+ a_ratio[i] +"  i为： " +i);
+                            d50=a_ratio[i];
+                            break;
+                        }
+                    }
+                    console.log("d50: "+ d50);
+
+                    
+                    // 计算距离
+                    s = (gd50z - 0.5) / (gd50z - d50)
+                    console.log("gd50, gd50z分别为：  " + gd50, gd50z);
+                    console.log("距离为：  "+s);
+                    // 计算lg(TCID50) =
+                    this.tcid50 = -(gd50 + 1 + s)
+                    console.log(this.tcid50);
+                    
+                    
+
+                    
+                }
+
+                    
+                    
+                
+            },
+        })
+    </script>
+</html>
